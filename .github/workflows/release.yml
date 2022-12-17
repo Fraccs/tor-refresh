@@ -45,7 +45,7 @@ jobs:
           git tag v${{ needs.detect-version.outputs.newVersion }}
           OLDVERSION="$(grep -m 1 -o '^[0-9]*\.[0-9]*\.[0-9]*' setup.cfg)"
           NEWVERSION="${{ needs.detect-version.outputs.newVersion }}"
-          sed -i "s/$OLDVERSION/$NEWVERSION" setup.cfg
+          sed -i "s/$OLDVERSION/$NEWVERSION/g" setup.cfg
           git add .
           git commit -m "bump: ${{ needs.detect-version.outputs.newVersion }}"
           git push
