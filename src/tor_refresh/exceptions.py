@@ -9,3 +9,7 @@ class TorHashingException(Exception):
 class TorStartFailedException(Exception):
     '''Raised if TOR fails to startup'''
     pass
+
+class UnsecureLength(Exception):
+    '''Raised if an unsecure length is passed when generating a secure password'''
+    pass
