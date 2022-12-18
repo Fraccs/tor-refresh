@@ -18,19 +18,18 @@ class Tor:
     - socks_port: int (TOR SocksPort)
     - control_port: int (TOR ControlPort)
     - password: str (Password for TOR ControlPort)
-    - storage_directory: str (TOR storage directory without the slash at the end)
     '''
 
-    def __init__(self, socks_port: int, control_port: int, password: str, storage_directory: str):
+    def __init__(self, socks_port: int, control_port: int, password: str):
         self.socks_port = socks_port
         self.control_port = control_port
         self.password = password
-        self.storage_directory_path = storage_directory
         self.is_tor_started = False
-        self.hashed_password = self.__hash_password__()
-        self.data_directory_path = self.__create_data_directory__()
-        self.torrc_path = self.__create_torrc__()
         self.tor_process = None
+        self.storage_directory_path = self.__create_storage_directory__()
+        self.data_directory_path = self.__create_data_directory__()
+        self.hashed_password = self.__hash_password__()
+        self.torrc_path = self.__create_torrc__()
 
     def start(self) -> None:
         '''
@@ -137,6 +136,22 @@ class Tor:
                     return line
 
             raise TorHashingException
+
+    def __create_storage_directory__(self) -> str:
+        '''
+        Creates the program storage directory
+        Raises:
+        - TorDataDirectoryException
+        '''
+
+        PATH = '/tmp/tor_refresh'
+
+        try:
+            os.mkdir(PATH)
+        except OSError:
+            pass
+
+        return PATH
 
     def __create_data_directory__(self) -> str:
         '''
