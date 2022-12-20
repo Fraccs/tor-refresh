@@ -1,4 +1,5 @@
 import atexit
+import readchar
 import sys
 import typer
 from colorama import Fore
@@ -36,7 +37,7 @@ def main(port: int = typer.Argument(9150), control_port: int = typer.Argument(91
         print(f'Hit {Fore.GREEN}\'r\'{Fore.WHITE} to refresh the TOR circuit')
         print(f'Hit {Fore.GREEN}\'e\'{Fore.WHITE} to exit')
 
-        user_input = sys.stdin.read(1)
+        user_input = readchar.readchar()
 
         if user_input == 'r':
             tor.renew_circuit()
