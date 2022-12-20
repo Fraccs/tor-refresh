@@ -29,6 +29,7 @@ pylint==2.15.8
 PySocks==1.7.1
 python-string-utils==1.0.0
 pywin32-ctypes==0.2.0
+readchar==4.0.3
 readme-renderer==37.3
 requests==2.28.1
 requests-toolbelt==0.10.1
