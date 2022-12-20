@@ -1,10 +1,12 @@
+import atexit
 import sys
 import typer
-from colorama import Fore, Style
+from colorama import Fore
 from tor_refresh.tor import Tor
 from tor_refresh.utils import get_secure_password
 from tor_refresh.exceptions import TorStartFailedException
 from tor_refresh.logger import log, err
+from tor_refresh.clean import clean_at_exit
 
 def main(port: int = typer.Argument(9150), control_port: int = typer.Argument(9151)):
     '''
@@ -13,6 +15,9 @@ def main(port: int = typer.Argument(9150), control_port: int = typer.Argument(91
     '''
 
     log(f'Welcome to {Fore.MAGENTA}TOR Refresh{Fore.WHITE}!')
+
+    # Register exit handler
+    atexit.register(clean_at_exit)
 
     tor = Tor(port, control_port, get_secure_password(16))
 
