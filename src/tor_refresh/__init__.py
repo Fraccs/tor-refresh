@@ -3,6 +3,9 @@ import readchar
 import sys
 import typer
 from colorama import Fore
+from datetime import datetime
+from rich.live import Live
+from rich.table import Table
 from tor_refresh.tor import Tor
 from tor_refresh.utils import get_secure_password
 from tor_refresh.exceptions import TorStartFailedException
@@ -31,21 +34,26 @@ def main(port: int = typer.Argument(9150), control_port: int = typer.Argument(91
         err('An error occurred while starting TOR, is something else using the same address?')
         sys.exit(-1)
 
-    # Input cycle
-    while True:
-        print(f'\nCurrent address\t:\t{Fore.YELLOW}{tor.get_external_address()}{Fore.WHITE}\n')
-        print(f'Hit {Fore.GREEN}\'r\'{Fore.WHITE} to refresh the TOR circuit')
-        print(f'Hit {Fore.GREEN}\'e\'{Fore.WHITE} to exit')
+    # Output table
+    table = Table(caption=f'Hit {Fore.GREEN}\'r\'{Fore.WHITE} to refresh the TOR circuit\nHit {Fore.GREEN}\'e\'{Fore.WHITE} to exit')
 
-        user_input = readchar.readchar()
+    table.add_column('Refresh date', style='Green')
+    table.add_column('IP Address', style='Yellow')
+    table.add_column('IP Location', style='Cyan')
 
-        if user_input == 'r':
-            tor.renew_circuit()
+    with Live(table, refresh_per_second=5):
+        while True:
+            table.add_row(f'{datetime.now()}', f'{tor.get_external_address()}', 'Unknown')
+            table.caption = f'Hit {Fore.GREEN}\'r\'{Fore.WHITE} to refresh the TOR circuit\nHit {Fore.GREEN}\'e\'{Fore.WHITE} to exit'
 
-        if user_input == 'e':
-            break
+            user_input = readchar.readchar()
 
-        sys.stdin.flush()
+            if user_input == 'r':
+                table.caption = 'Refreshing...'
+                tor.renew_circuit()
+
+            if user_input == 'e':
+                break
 
     tor.stop()
 
