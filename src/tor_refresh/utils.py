@@ -1,4 +1,5 @@
 import string_utils
+import requests
 from .exceptions import UnsecureLength
 
 def get_secure_password(length: int=20) -> str:
@@ -20,3 +21,12 @@ def get_secure_password(length: int=20) -> str:
     shuffled = string_utils.shuffle(characters)
     
     return shuffled[:length]
+
+def get_ip_location(ip: str) -> str:
+    '''
+    Returns the location (State) of the passed IPv4 address
+    '''
+
+    res = requests.get(f'https://ipapi.co/{ip}/json')
+
+    return res.json()['country_name']
