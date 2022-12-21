@@ -7,7 +7,7 @@ from datetime import datetime
 from rich.live import Live
 from rich.table import Table
 from tor_refresh.tor import Tor
-from tor_refresh.utils import get_secure_password
+from tor_refresh.utils import get_secure_password, get_ip_location
 from tor_refresh.exceptions import TorStartFailedException
 from tor_refresh.logger import log, err
 from tor_refresh.clean import clean_at_exit
@@ -43,7 +43,9 @@ def main(port: int = typer.Argument(9150), control_port: int = typer.Argument(91
 
     with Live(table, refresh_per_second=5):
         while True:
-            table.add_row(f'{datetime.now()}', f'{tor.get_external_address()}', 'Unknown')
+            address = tor.get_external_address()
+
+            table.add_row(f'{datetime.now()}', f'{address}', f'{get_ip_location(address)}')
             table.caption = f'Hit {Fore.GREEN}\'r\'{Fore.WHITE} to refresh the TOR circuit\nHit {Fore.GREEN}\'e\'{Fore.WHITE} to exit'
 
             user_input = readchar.readchar()
