@@ -44,8 +44,14 @@ def main(port: int = typer.Argument(9150), control_port: int = typer.Argument(91
     with Live(table, refresh_per_second=5):
         while True:
             address = tor.get_external_address()
+            location = 'Unknown'
 
-            table.add_row(f'{datetime.now()}', f'{address}', f'{get_ip_location(address)}')
+            try:
+                location = get_ip_location(address)
+            except:
+                pass
+
+            table.add_row(f'{datetime.now()}', f'{address}', f'{location}')
             table.caption = f'Hit {Fore.GREEN}\'r\'{Fore.WHITE} to refresh the TOR circuit\nHit {Fore.GREEN}\'e\'{Fore.WHITE} to exit'
 
             user_input = readchar.readchar()
