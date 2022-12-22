@@ -15,6 +15,18 @@
 
 ---
 
+## Installation (tor)
+
+> The program needs the tor executable in order to work, skip this if you have it already.
+
+```bash
+sudo apt update
+```
+
+```bash
+sudo apt install tor
+```
+
 ## Installation (pipx)
 
 ### Install pipx
